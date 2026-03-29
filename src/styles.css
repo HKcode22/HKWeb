@@ -7,6 +7,7 @@
   --accent: #10b981;
   --accent-soft: rgba(16, 185, 129, 0.12);
   --accent-strong: #22c55e;
+  --accent-glow: rgba(16, 185, 129, 0.3);
   --text: #e5e7eb;
   --text-muted: #9ca3af;
   --chip-bg: rgba(15, 23, 42, 0.9);
@@ -15,6 +16,7 @@
   --radius-full: 999px;
   --shadow-soft: 0 18px 60px rgba(15, 23, 42, 0.75);
   --shadow-strong: 0 28px 80px rgba(15, 23, 42, 0.9);
+  --shadow-glow: 0 0 40px rgba(16, 185, 129, 0.2);
 }
 
 *,
@@ -40,13 +42,19 @@ body {
 .app-root {
   min-height: 100vh;
   background:
-    radial-gradient(circle at top left, rgba(56, 189, 248, 0.25), transparent 55%),
-    radial-gradient(circle at bottom right, rgba(16, 185, 129, 0.25), transparent 55%),
-    radial-gradient(circle at center, rgba(30, 64, 175, 0.28), transparent 65%),
-    #020617;
+    radial-gradient(circle at top left, rgba(56, 189, 248, 0.15), transparent 50%),
+    radial-gradient(circle at bottom right, rgba(16, 185, 129, 0.15), transparent 50%),
+    radial-gradient(circle at center, rgba(139, 92, 246, 0.08), transparent 60%),
+    linear-gradient(135deg, #020617 0%, #0f172a 50%, #020617 100%);
   color: var(--text);
   position: relative;
   overflow: hidden;
+  animation: backgroundShift 20s ease-in-out infinite;
+}
+
+@keyframes backgroundShift {
+  0%, 100% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
 }
 
 .noise-overlay {
@@ -96,13 +104,22 @@ body {
   width: 32px;
   height: 32px;
   border-radius: 999px;
-  background: radial-gradient(circle at 30% 20%, var(--accent-strong), #22c55e);
+  background: linear-gradient(135deg, var(--accent-strong), #10b981, #34d399);
   color: #020617;
   font-weight: 700;
   font-size: 0.9rem;
   letter-spacing: 0.04em;
   box-shadow: 0 0 0 1px rgba(34, 197, 94, 0.4),
-    0 15px 30px rgba(16, 185, 129, 0.5);
+    0 15px 30px rgba(16, 185, 129, 0.5),
+    var(--shadow-glow);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.brand-mark:hover {
+  transform: scale(1.05);
+  box-shadow: 0 0 0 1px rgba(34, 197, 94, 0.6),
+    0 20px 40px rgba(16, 185, 129, 0.7),
+    0 0 60px rgba(16, 185, 129, 0.3);
 }
 
 .brand-text {
@@ -198,6 +215,7 @@ body {
 .accent {
   background: linear-gradient(to right, #4ade80, #22c55e, #6ee7b7);
   -webkit-background-clip: text;
+  background-clip: text;
   color: transparent;
 }
 
@@ -223,19 +241,38 @@ body {
   padding: 0.7rem 1.4rem;
   border-radius: 999px;
   border: none;
-  background: linear-gradient(to right, #22c55e, #4ade80);
+  background: linear-gradient(135deg, #22c55e, #4ade80, #34d399);
   color: #022c22;
   font-size: 0.9rem;
   font-weight: 600;
   text-decoration: none;
-  box-shadow: 0 18px 40px rgba(16, 185, 129, 0.5);
+  box-shadow: 0 18px 40px rgba(16, 185, 129, 0.5),
+    0 0 30px rgba(16, 185, 129, 0.2);
   transition: transform 0.12s ease-out, box-shadow 0.12s ease-out, filter 0.12s ease-out;
+  position: relative;
+  overflow: hidden;
+}
+
+.btn-primary::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  transition: left 0.5s;
+}
+
+.btn-primary:hover::before {
+  left: 100%;
 }
 
 .btn-primary:hover {
-  transform: translateY(-1px);
-  filter: brightness(1.05);
-  box-shadow: 0 20px 60px rgba(16, 185, 129, 0.65);
+  transform: translateY(-2px);
+  filter: brightness(1.1);
+  box-shadow: 0 25px 60px rgba(16, 185, 129, 0.7),
+    0 0 40px rgba(16, 185, 129, 0.3);
 }
 
 .btn-ghost {
@@ -378,22 +415,30 @@ body {
   border-radius: var(--radius-lg);
   padding: 1.6rem 1.5rem;
   border: 1px solid rgba(148, 163, 184, 0.32);
-  box-shadow: var(--shadow-soft);
+  box-shadow: var(--shadow-soft), var(--shadow-glow);
   position: relative;
   overflow: hidden;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
 .card::before {
   content: "";
   position: absolute;
   inset: 0;
-  background: radial-gradient(circle at top left, rgba(34, 197, 94, 0.14), transparent 60%);
+  background: radial-gradient(circle at top left, rgba(34, 197, 94, 0.14), transparent 60%),
+    radial-gradient(circle at bottom right, rgba(139, 92, 246, 0.08), transparent 70%);
   opacity: 0;
-  transition: opacity 0.2s ease-out;
+  transition: opacity 0.3s ease-out;
 }
 
 .card:hover::before {
   opacity: 1;
+}
+
+.card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 25px 70px rgba(15, 23, 42, 0.8),
+    0 0 50px rgba(16, 185, 129, 0.15);
 }
 
 .card h3 {
